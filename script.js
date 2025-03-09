@@ -302,6 +302,7 @@ more.addEventListener("click", ()=> {
         addSeeLess("bestRated", "d-block");
     })
 })
+let less = document.getElementById("bestRated");
 
 less.addEventListener("click", ()=> {
     bestRated.then((data) => {
@@ -315,19 +316,22 @@ less.addEventListener("click", ()=> {
 window.addEventListener("resize", ()=> {
         generateMovies(bestRated, "bestRated")
 })
-
-
-
-
+//  ============ Mystery ============
+let mystery = getMovies3("?genre=mystery")
+generateMovies(mystery, "mystery")
 
 
 // fill the selection menu
 getCategory();
+let other = getMovies3("?genre=action");
+generateMovies(other, "other");
 
 // listen for any change in menu
 let selectedItem = document.getElementById("category-select");
 selectedItem.addEventListener("change", ()=> {
-    getMovies(`?genre=${selectedItem.value}`, "other");
+//    getMovies(`?genre=${selectedItem.value}`, "other");
+    let block = getMovies3(`?genre=${selectedItem.value}`);
+    generateMovies(block, "other");
 });
 
 
