@@ -10,51 +10,8 @@ const blockEnd = `
 let filmNumber = 10
 let categoryMovieBlock = 6
 
-async function getMovies(url, id, type) {
-    const filmList = [];
 
-    for (let j=1; j<3; j++) {
-        const response = await fetch(`${url_title}${url}&format=json&page=${j}`);
-        const film1 = await response.json();
-        for (i in film1.results) {
-            filmList.push(film1.results[i]);
-        }
-    }
 
-    let blockToLook = document.getElementById(id);
-    blockToLook.innerHTML = "";
-
-    for (let i = 0; i < 6; i++) {
-        film = filmList[i];
-        let id = i+1
-
-        let movieBlock = `
-            <div class="col-12 col-md-6 col-lg-4 pb-5">
-                <div class="square" style="background-image: url(${film.image_url}); background-size: cover">
-                </div>
-                <div class="overlay row">
-                    <div class="col-12">
-                        <h4 style="color: white">${film.title}</h4>
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary rounded-4 px-4" data-toggle="modal" data-target="#${film.id}"><strong>Détail</strong></button>
-
-        `;
-        // retrieve the specific film detail from URL using id then concatenate with the modal creator
-        const response2 = await fetch(`${url_title}${film.id}`);
-        const film2 = await response2.json();
-        let modal = getModalDetail(film2, film2.id);
-
-    blockToLook.innerHTML += movieBlock+modal+blockEnd;
-    }
-}
-
-// tried to make some dynamic pagination browsing... nok
-async function getCount(type) {
-    const response = await fetch(`http://localhost:8000/api/v1/${type}`);
-    const result = await response.json();
-    return result;
-}
 
 // get categories and create the options in select menu
 async function getCategory() {
@@ -209,7 +166,7 @@ function addSeeMore(id, display) {
     let blockToChange = document.getElementById(id)
     let blockToAdd = `
         <div id="seeMore"  class="row d-flex justify-content-center">
-            <button class="col-4 btn btn-danger rounded-4 ${display}" id="more" type="button" >Voir plus</button>
+            <button onclick="${id}More()" class="col-4 btn btn-danger rounded-4 ${display}" id="more" type="button" >Voir plus</button>
         </div>
     `
     blockToChange.innerHTML += blockToAdd
@@ -219,11 +176,14 @@ function addSeeLess(id, display) {
     let blockToChange = document.getElementById(id)
     let blockToAdd = `
         <div id="seeLess"  class="row d-flex justify-content-center">
-            <button class="col-4 btn btn-danger rounded-4 ${display}" id="less" type="button" >Voir moins</button>
+            <button onclick="${id}Less()" class="col-4 btn btn-danger rounded-4 ${display}" id="less" type="button" >Voir moins</button>
         </div>
     `
     blockToChange.innerHTML += blockToAdd;
 }
+
+
+
 
 // add movie block quantity depending on screen size
 function generateMovies(movieProm, id) {
@@ -256,29 +216,7 @@ function generateMoviesUnsized(movieProm, id) {
     });
 }
 
-function listenButton(blockId) {
-    let more = document.querySelector("#blockId button");
-    // when the button is clicked ; regenerate blocks and hide button
-    more.addEventListener("click", ()=> {
-        blockId.then((data) => {
-            createBlock(data, "blockId", 6);
-            addSeeMore("blockId", "d-none");
-            addSeeLess("blockId", "d-block");
-        })
-    })
 
-    let less = document.querySelector("#bockId button");
-    less.addEventListener("click", ()=> {
-        blockId.then((data) => {
-            generateMovies(blockId, "blockId");
-        })
-    })
-
-// when the screen changes, regenerate blocks
-window.addEventListener("resize", ()=> {
-        generateMovies(bestRated, "bestRated")
-})
-}
 
 // ============ best film ============
 // Il Grande Lebowski
@@ -291,30 +229,14 @@ let bestRated = getMovies3("?sort_by=-imdb_score");
 // create blocks depending on current screen's size
 generateMovies(bestRated, "bestRated");
 
-//retrieve the button when it exists (better than getElementById which could raise an error
-let more = document.querySelector("#bestRated");
-console.log(more)
-// when the button is clicked ; regenerate blocks and hide button
-more.addEventListener("click", ()=> {
-    bestRated.then((data) => {
-        createBlock(data, "bestRated", 6);
-        addSeeMore("bestRated", "d-none");
-        addSeeLess("bestRated", "d-block");
-    })
-})
-let less = document.getElementById("bestRated");
 
-less.addEventListener("click", ()=> {
-    bestRated.then((data) => {
-        createBlock(data, "bestRated", 6);
-        addSeeMore("bestRated", "d-none");
-        addSeeLess("bestRated", "d-block");
-    })
-})
 
 // when the screen changes, regenerate blocks
 window.addEventListener("resize", ()=> {
-        generateMovies(bestRated, "bestRated")
+        generateMovies(bestRated, "bestRated");
+        generateMovies(mystery, "mystery");
+        generateMovies(other, "other");
+
 })
 //  ============ Mystery ============
 let mystery = getMovies3("?genre=mystery")
@@ -335,91 +257,35 @@ selectedItem.addEventListener("change", ()=> {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-function createBlock2(filmList, id, count) {
-    let blockToLook = document.getElementById(id);
-    blockToLook.innerHTML = "";
-    let display = "d-block"
-
-    for (let i = 0; i < count; i++) {
-        film = filmList[i];
-        let id = i+1
-
-        if (i === 0 || i === 1 ) {
-            display = "d-block"
-        }
-        if (i === 2 || i === 3) {
-            display = "d-none d-md-block"
-        }
-        if (i === 4 || i === 5) {
-            display = "d-none d-lg-block"
-        }
-
-        let movieBlock = `
-            <div class="col-12 col-md-6 col-lg-4 pb-5 ${display}" id="${i}">
-                <div class="square" style="background-image: url(${film.image_url}); background-size: cover">
-                </div>
-                <div class="overlay row">
-                    <div class="col-12">
-                        <h4 style="color: white">${film.title}</h4>
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary rounded-4 px-4" data-toggle="modal" data-target="#${film.id}"><strong>Détail</strong></button>
-
-        `;
-        // retrieve the specific film detail from URL using id then concatenate with the modal creator
-        let modal = getModalDetail(film, film.id);
-
-
-
-        blockToLook.innerHTML += movieBlock+modal+blockEnd;
-    }
+function bestRatedMore() {
+    bestRated.then((data) => {
+        createBlock(data, "bestRated", 6);
+        addSeeMore("bestRated", "d-none");
+        addSeeLess("bestRated", "d-block");
+    })
+}
+function bestRatedLess() {
+    generateMovies(bestRated, "bestRated")
 }
 
-async function getMovies2(url, id) {
-    const filmList = [];
-    //let countMovies = 6;
+function mysteryMore() {
+    mystery.then((data) => {
+        createBlock(data, "mystery", 6);
+        addSeeMore("mystery", "d-none");
+        addSeeLess("mystery", "d-block");
+    })
+}
+function mysteryLess() {
+    generateMovies(mystery, "mystery")
+}
 
-    for (let j=1; j<3; j++) {
-        const response = await fetch(`${url_title}${url}&format=json&page=${j}`);
-        const film1 = await response.json();
-        for (i in film1.results) {
-            filmList.push(film1.results[i]);
-        }
-    }
-
-    let blockToLook = document.getElementById(id);
-    blockToLook.innerHTML = "";
-
-    for (let i = 0; i < count; i++) {
-        film = filmList[i];
-        let movieBlock = `
-            <div class="col-12 col-md-6 col-lg-4 pb-5">
-                <div class="square" style="background-image: url(${film.image_url}); background-size: cover">
-                </div>
-                <div class="overlay row">
-                    <div class="col-12">
-                        <h4 style="color: white">${film.title}</h4>
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary rounded-4 px-4" data-toggle="modal" data-target="#${film.id}"><strong>Détail</strong></button>
-
-        `;
-        // retrieve the specific film detail from URL using id then concatenate with the modal creator
-        const response2 = await fetch(`${url_title}${film.id}`);
-        const film2 = await response2.json();
-        let modal = getModalDetail(film2, film2.id);
-
-    blockToLook.innerHTML += movieBlock+modal+blockEnd;
-    }
+function otherMore() {
+    other.then((data) => {
+        createBlock(data, "other", 6);
+        addSeeMore("other", "d-none");
+        addSeeLess("other", "d-block");
+    })
+}
+function otherLess() {
+    generateMovies(other, "other")
 }
