@@ -37,28 +37,33 @@ async function bestFilm(filmId) {
         const response = await fetch(`${url_title}${filmId}`);
         const bfilm = await response.json();
 
+        let blockToLook = document.getElementById("bestFilm");
+
         let detail = `
                 <div class="row">
                     <div class="col d-flex justify-content-center my-2"  >
                         <img class="img-fluid d-none d-md-block" src="${bfilm.image_url}" alt="film cover">
                     </div>
-                    <div class="col-12 d-block d-md-none" style="background-image: url(${bfilm.image_url}); background-size: cover"></div>
                     <div class="col-sm-12 col-md-9 my-3">
                             <div class="col-12  d-flex justify-content-start"><h2>${bfilm.title}</h2></div>
                             <div class="col-12">${bfilm.description}</div>
-                            <div class="col-12 d-flex justify-content-end mt-auto">
+                            <div class="col-12 d-flex justify-content-end">
                                 <button type="button" class="btn btn-danger rounded-4 px-4" data-toggle="modal" data-target="#${bfilm.id}">Détail</button>
                             </div>
                     </div>
                 </div>
         `;
-        let modal = getModalDetail(bfilm, bfilm.id);
-        document.getElementById("bestFilm").innerHTML += detail+modal;
+        //document.getElementById("bestFilm").innerHTML += detail+modal;
+        blockToLook.innerHTML += detail;
+        getModalDetail(bfilm, bfilm.id, blockToLook);
+
 
 }
+async function getModalDetail(filmData, modalId, blockToLook) {
 
-// create the modal HTML block for a given film object
-function getModalDetail(film, modalId) {
+    const response = await fetch(`${filmData.url}`);
+    const film = await response.json();
+
     let recette = "N/A";
     let genre = recette;
 
@@ -117,9 +122,12 @@ function getModalDetail(film, modalId) {
             </div>
         </div>
     </div>
-    `;
-    return modalContent;
+    `
+    blockToLook.innerHTML += modalContent
+    //return modalContent;
 }
+
+
 
 // get MovieList, returns a promise
 async function getMovies3(url) {
@@ -134,13 +142,16 @@ async function getMovies3(url) {
     return filmList;
 }
 
+
 // get a movie List and create HTML blocks
 function createBlock(filmList, id, count) {
     // get the element to change
     let blockToLook = document.getElementById(id);
     blockToLook.innerHTML = "";
+
     for (let i = 0; i < count; i++) {
         film = filmList[i];
+
         let movieBlock = `
             <div class="col-12 col-md-6 col-lg-4 pb-5" id="${i}">
                 <div class="square" style="background-image: url(${film.image_url}); background-size: cover">
@@ -155,9 +166,10 @@ function createBlock(filmList, id, count) {
                 </div>
             </div>
         `;
-        // retrieve the specific film detail from URL using id then concatenate with the modal creator
-        let modal = getModalDetail(film, film.id);
-        blockToLook.innerHTML += movieBlock+modal;
+
+        // create the block, then call the modal creation from the async function
+        blockToLook.innerHTML += movieBlock
+        getModalDetail(film, film.id, blockToLook);
     }
 }
 
@@ -182,81 +194,7 @@ function addSeeLess(id, display) {
     blockToChange.innerHTML += blockToAdd;
 }
 
-
-
-
-// add movie block quantity depending on screen size
-function generateMovies(movieProm, id) {
-
-    if (screen.width < 768 ) {
-        movieProm.then((data) => {
-            createBlock(data, id, 2);
-            addSeeMore(id, "d-block");
-        })
-    }
-
-    if (screen.width === 768 || screen.width > 768 && screen.width < 992) {
-        movieProm.then((data) => {
-            createBlock(data, id, 4);
-            addSeeMore(id, "d-block");
-        })
-    }
-
-    if (screen.width > 992) {
-        movieProm.then((data) => {
-            createBlock(data, id, 6);
-            addSeeMore(id, "d-none");
-        })
-    }
-}
-
-function generateMoviesUnsized(movieProm, id) {
-    movieProm.then((data) => {
-        createBlock(data, id, 6);
-    });
-}
-
-
-
-// ============ best film ============
-// Il Grande Lebowski
-// bestFilm("118715")
-bestFilm("101928");
-
-// ============ Best Rated ============
-//getMovies("?sort_by=-imdb_score", "bestRated");
-let bestRated = getMovies3("?sort_by=-imdb_score");
-// create blocks depending on current screen's size
-generateMovies(bestRated, "bestRated");
-
-
-
-// when the screen changes, regenerate blocks
-window.addEventListener("resize", ()=> {
-        generateMovies(bestRated, "bestRated");
-        generateMovies(mystery, "mystery");
-        generateMovies(other, "other");
-
-})
-//  ============ Mystery ============
-let mystery = getMovies3("?genre=mystery")
-generateMovies(mystery, "mystery")
-
-
-// fill the selection menu
-getCategory();
-let other = getMovies3("?genre=action");
-generateMovies(other, "other");
-
-// listen for any change in menu
-let selectedItem = document.getElementById("category-select");
-selectedItem.addEventListener("change", ()=> {
-//    getMovies(`?genre=${selectedItem.value}`, "other");
-    let block = getMovies3(`?genre=${selectedItem.value}`);
-    generateMovies(block, "other");
-});
-
-
+// functions called by buttons :
 function bestRatedMore() {
     bestRated.then((data) => {
         createBlock(data, "bestRated", 6);
@@ -286,6 +224,77 @@ function otherMore() {
         addSeeLess("other", "d-block");
     })
 }
+
 function otherLess() {
     generateMovies(other, "other")
 }
+// end of functions called by buttons
+
+
+// add movie block quantity depending on screen size
+function generateMovies(movieProm, id) {
+
+    if (screen.width < 768 ) {
+        movieProm.then((data) => {
+            createBlock(data, id, 2);
+            addSeeMore(id, "d-block");
+        })
+    }
+
+    if (screen.width === 768 || screen.width > 768 && screen.width < 992) {
+        movieProm.then((data) => {
+            createBlock(data, id, 4);
+            addSeeMore(id, "d-block");
+        })
+    }
+
+    if (screen.width > 992) {
+        movieProm.then((data) => {
+            createBlock(data, id, 6);
+            addSeeMore(id, "d-none");
+        })
+    }
+}
+
+
+
+
+// ============ best film ============
+// Il Grande Lebowski
+// bestFilm("118715")
+bestFilm("101928");
+
+
+// Get resources
+let bestRated = getMovies3("?sort_by=-imdb_score");
+let mystery = getMovies3("?genre=mystery")
+let other = getMovies3("?genre=action");
+
+// ============ Best Rated ============
+// create blocks depending on current screen's size
+generateMovies(bestRated, "bestRated");
+
+//  ============ Mystery ============
+generateMovies(mystery, "mystery")
+
+//  ============ Other ============
+// fill the selection menu
+getCategory();
+generateMovies(other, "other");
+
+// listen for any change in menu
+let selectedItem = document.getElementById("category-select");
+selectedItem.addEventListener("change", ()=> {
+//    getMovies(`?genre=${selectedItem.value}`, "other");
+    let block = getMovies3(`?genre=${selectedItem.value}`);
+    generateMovies(block, "other");
+});
+
+// when the screen changes, regenerate blocks for all
+window.addEventListener("resize", ()=> {
+        generateMovies(bestRated, "bestRated");
+        generateMovies(mystery, "mystery");
+        generateMovies(other, "other");
+
+})
+
