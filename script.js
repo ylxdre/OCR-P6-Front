@@ -1,18 +1,6 @@
 const url_title = "http://localhost:8000/api/v1/titles/";
 const url_genre = "http://localhost:8000/api/v1/genres/";
 
-const blockEnd = `
-            </div>
-        </div>
-    </div>
-`;
-
-let filmNumber = 10
-let categoryMovieBlock = 6
-
-
-
-
 // get categories and create the options in select menu
 async function getCategory() {
     listeGenres = [];
