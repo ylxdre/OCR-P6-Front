@@ -1,24 +1,6 @@
 const url_title = "http://localhost:8000/api/v1/titles/";
 const url_genre = "http://localhost:8000/api/v1/genres/";
 
-// get categories and create the options in select menu
-async function getCategory() {
-    listeGenres = [];
-    for (let i = 1; i<6; i++) {
-        const response = await fetch(`${url_genre}?page=${i}`);
-        const genres = await response.json();
-        for (let j in genres.results) {
-            listeGenres.push(genres.results[j].name);
-        };
-    }
-    let categorySelect = document.getElementById("category-select");
-    for (i in listeGenres) {
-        let option = `
-            <option value="${listeGenres[i]}">${listeGenres[i]}</option>
-        `;
-        categorySelect.innerHTML += option;
-    }
-}
 
 // create the best film block and get a movie from a given ID
 async function bestFilm(filmId) {
@@ -30,7 +12,7 @@ async function bestFilm(filmId) {
         let detail = `
                 <div class="row">
                     <div class="col d-flex justify-content-center my-2"  >
-                        <img class="img-fluid d-none d-md-block" src="${bfilm.image_url}" alt="film cover">
+                        <img class="img-fluid" src="${bfilm.image_url}" alt="film cover">
                     </div>
                     <div class="col-sm-12 col-md-9 my-3">
                             <div class="col-12  d-flex justify-content-start"><h2>${bfilm.title}</h2></div>
@@ -41,14 +23,13 @@ async function bestFilm(filmId) {
                     </div>
                 </div>
         `;
-        //document.getElementById("bestFilm").innerHTML += detail+modal;
         blockToLook.innerHTML += detail;
         getModalDetail(bfilm, bfilm.id, blockToLook);
-
-
 }
-async function getModalDetail(filmData, modalId, blockToLook) {
 
+// call the movie URL, retrieve data and create modal block, then insert it in HTML directly
+// avoid to manage a promise object in createBlock()
+async function getModalDetail(filmData, modalId, blockToLook) {
     const response = await fetch(`${filmData.url}`);
     const film = await response.json();
 
@@ -61,6 +42,7 @@ async function getModalDetail(filmData, modalId, blockToLook) {
     if (film.genre) {
         genre = film.genre;
     }
+
     let modalContent = `
     <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -112,12 +94,12 @@ async function getModalDetail(filmData, modalId, blockToLook) {
     </div>
     `
     blockToLook.innerHTML += modalContent
-    //return modalContent;
 }
 
 
 
-// get MovieList, returns a promise
+// get a list of movies from a first general call based on query string;
+// -> returns a promise
 async function getMovies3(url) {
     const filmList = [];
     for (let j=1; j<3; j++) {
@@ -131,7 +113,9 @@ async function getMovies3(url) {
 }
 
 
-// get a movie List and create HTML blocks
+// create HTML blocks from a movie list
+// Called by generateMovies (using screen size) and the button "more" to create 6 blocks
+// (they've already handled the promise)
 function createBlock(filmList, id, count) {
     // get the element to change
     let blockToLook = document.getElementById(id);
@@ -161,6 +145,26 @@ function createBlock(filmList, id, count) {
     }
 }
 
+// get categories and create the options in select menu
+async function getCategory() {
+    listeGenres = [];
+    for (let i = 1; i<6; i++) {
+        const response = await fetch(`${url_genre}?page=${i}`);
+        const genres = await response.json();
+        for (let j in genres.results) {
+            listeGenres.push(genres.results[j].name);
+        };
+    }
+    let categorySelect = document.getElementById("category-select");
+    for (i in listeGenres) {
+        let option = `
+            <option value="${listeGenres[i]}">${listeGenres[i]}</option>
+        `;
+        categorySelect.innerHTML += option;
+    }
+}
+
+// ==================== buttons
 // add button with requested display
 function addSeeMore(id, display) {
     let blockToChange = document.getElementById(id)
@@ -181,8 +185,10 @@ function addSeeLess(id, display) {
     `
     blockToChange.innerHTML += blockToAdd;
 }
+//====================  end buttons
 
-// functions called by buttons :
+// ==================== functions called by buttons
+//for each container... could be improved (factorized)
 function bestRatedMore() {
     bestRated.then((data) => {
         createBlock(data, "bestRated", 6);
@@ -216,26 +222,24 @@ function otherMore() {
 function otherLess() {
     generateMovies(other, "other")
 }
-// end of functions called by buttons
+// ==================== end of functions called by buttons
 
 
-// add movie block quantity depending on screen size
+// responsive management
+// generate the movies block depending on screen size
 function generateMovies(movieProm, id) {
-
     if (screen.width < 768 ) {
         movieProm.then((data) => {
             createBlock(data, id, 2);
             addSeeMore(id, "d-block");
         })
     }
-
     if (screen.width === 768 || screen.width > 768 && screen.width < 992) {
         movieProm.then((data) => {
             createBlock(data, id, 4);
             addSeeMore(id, "d-block");
         })
     }
-
     if (screen.width > 992) {
         movieProm.then((data) => {
             createBlock(data, id, 6);
@@ -244,8 +248,7 @@ function generateMovies(movieProm, id) {
     }
 }
 
-
-
+// main
 
 // ============ best film ============
 // Il Grande Lebowski
@@ -259,7 +262,6 @@ let mystery = getMovies3("?genre=mystery")
 let other = getMovies3("?genre=action");
 
 // ============ Best Rated ============
-// create blocks depending on current screen's size
 generateMovies(bestRated, "bestRated");
 
 //  ============ Mystery ============
@@ -270,14 +272,17 @@ generateMovies(mystery, "mystery")
 getCategory();
 generateMovies(other, "other");
 
+
+// Make it dynamic, step 8
 // listen for any change in menu
 let selectedItem = document.getElementById("category-select");
 selectedItem.addEventListener("change", ()=> {
-//    getMovies(`?genre=${selectedItem.value}`, "other");
     let block = getMovies3(`?genre=${selectedItem.value}`);
     generateMovies(block, "other");
 });
 
+// Make it dynamic, step 7
+// responsive management
 // when the screen changes, regenerate blocks for all
 window.addEventListener("resize", ()=> {
         generateMovies(bestRated, "bestRated");
