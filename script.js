@@ -211,6 +211,18 @@ function mysteryLess() {
     generateMovies(mystery, "mystery")
 }
 
+function animationMore() {
+    animation.then((data) => {
+        createBlock(data, "animation", 6);
+        addSeeMore("animation", "d-none");
+        addSeeLess("animation", "d-block");
+    })
+}
+
+function animationLess() {
+    generateMovies(animation, "animation")
+}
+
 function otherMore() {
     other.then((data) => {
         createBlock(data, "other", 6);
@@ -258,14 +270,19 @@ bestFilm("101928");
 
 // Get resources
 let bestRated = getMovies3("?sort_by=-imdb_score");
-let mystery = getMovies3("?genre=mystery")
+let mystery = getMovies3("?genre=mystery");
+let animation = getMovies3("?genre=animation");
 let other = getMovies3("?genre=action");
+
 
 // ============ Best Rated ============
 generateMovies(bestRated, "bestRated");
 
 //  ============ Mystery ============
 generateMovies(mystery, "mystery")
+
+//  ============ Animation ============
+generateMovies(animation, "animation")
 
 //  ============ Other ============
 // fill the selection menu
@@ -287,6 +304,7 @@ selectedItem.addEventListener("change", ()=> {
 window.addEventListener("resize", ()=> {
         generateMovies(bestRated, "bestRated");
         generateMovies(mystery, "mystery");
+        generateMovies(animation, "animation");
         generateMovies(other, "other");
 
 })
