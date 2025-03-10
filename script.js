@@ -296,6 +296,7 @@ let selectedItem = document.getElementById("category-select");
 selectedItem.addEventListener("change", ()=> {
     let block = getMovies3(`?genre=${selectedItem.value}`);
     generateMovies(block, "other");
+    other = block;
 });
 
 // Make it dynamic, step 7
@@ -306,6 +307,5 @@ window.addEventListener("resize", ()=> {
         generateMovies(mystery, "mystery");
         generateMovies(animation, "animation");
         generateMovies(other, "other");
-
 })
 
