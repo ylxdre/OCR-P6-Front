@@ -14,7 +14,7 @@ async function bestFilm(filmId) {
                         <img class="img-fluid  d-none d-md-block" src="${bfilm.image_url}" alt="film cover">
                     </div>
                     <div class="col-12 d-flex items- d-block d-md-none">
-                        <div class="bfilm" style="background-image: url(${bfilm.image_url}); "></div>
+                        <div class="bfilm" style="background-image: url(${bfilm.image_url}); background-size: cover; "></div>
                     </div>
                     <div class="col-12 col-md-9 my-3">
                             <div class="col-12  d-flex justify-content-start"><h2>${bfilm.title}</h2></div>
