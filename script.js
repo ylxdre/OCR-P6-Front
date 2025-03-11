@@ -10,18 +10,19 @@ async function bestFilm(filmId) {
         let blockToLook = document.getElementById("bestFilm");
 
         let detail = `
-                <div class="row">
-                    <div class="col d-flex justify-content-center my-2"  >
-                        <img class="img-fluid" src="${bfilm.image_url}" alt="film cover">
+                    <div class="col d-flex justify-content-center my-2">
+                        <img class="img-fluid  d-none d-md-block" src="${bfilm.image_url}" alt="film cover">
                     </div>
-                    <div class="col-sm-12 col-md-9 my-3">
+                    <div class="col-12 d-flex items- d-block d-md-none">
+                        <div class="bfilm" style="background-image: url(${bfilm.image_url}); "></div>
+                    </div>
+                    <div class="col-12 col-md-9 my-3">
                             <div class="col-12  d-flex justify-content-start"><h2>${bfilm.title}</h2></div>
                             <div class="col-12">${bfilm.description}</div>
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="button" class="btn btn-danger rounded-4 px-4" data-toggle="modal" data-target="#${bfilm.id}">Détail</button>
                             </div>
                     </div>
-                </div>
         `;
         blockToLook.innerHTML += detail;
         getModalDetail(bfilm, bfilm.id, blockToLook);
