@@ -11,7 +11,7 @@ async function bestFilm(filmId) {
 
         let detail = `
                     <div class="col d-flex justify-content-center my-2">
-                        <img class="img-fluid  d-none d-md-block" src="${bfilm.image_url}" alt="film cover">
+                        <img class="img-fluid  d-none d-md-block" src="${bfilm.image_url}" alt="${bfilm.title}">
                     </div>
                     <div class="col-12 d-flex items- d-block d-md-none">
                         <div class="bfilm" style="background-image: url(${bfilm.image_url}); background-size: cover; "></div>
@@ -49,7 +49,7 @@ async function getModalDetail(filmData, modalId, blockToLook) {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="${modalId}">Détail du film</h5>
+                    <div class="modal-title" id="${modalId}">Détail du film</div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -59,7 +59,7 @@ async function getModalDetail(filmData, modalId, blockToLook) {
                     <div class="row">
                         <div class="col-12-auto col-lg-6 ">
                             <div class="p-2">
-                                <div class="py-2 fw-bolder"><h1>${film.title}</h1></div>
+                                <div class="fs-2 py-2 fw-bolder">${film.title}</div>
                                 <div class="fs-4">${film.year} - ${genre}</div>
                                 <div class="fs-4">${film.duration} minutes (${film.countries})</div>
                                 <div class="fs-4">IMDB score: ${film.imdb_score}/10</div>
@@ -70,7 +70,7 @@ async function getModalDetail(filmData, modalId, blockToLook) {
                             </div>
                         </div>
                         <div class="col-12-auto col-lg-6 d-flex justify-content-center">
-                            <img src="${film.image_url}" class="img-fluid my-3 d-none d-lg-block" alt="Film Cover">
+                            <img src="${film.image_url}" class="img-fluid my-3 d-none d-lg-block" alt="${film.title}">
                         </div>
                     </div>
                     <!-- second part -->
@@ -79,7 +79,7 @@ async function getModalDetail(filmData, modalId, blockToLook) {
                             <div class="p-3 border bg-light">${film.long_description}
                             </div>
                             <div class="col-12 d-flex justify-content-center">
-                                <img src="${film.image_url}" class=" my-3 d-lg-none" alt="Film Cover">
+                                <img src="${film.image_url}" class=" my-3 d-lg-none" alt="${film.title}">
                             </div>
                         <div class="p-3 border order-md-3 bg-light mt-3">
                             <strong>Avec: </strong>
@@ -131,7 +131,7 @@ function createBlock(filmList, id, count) {
                 </div>
                 <div class="overlay row">
                     <div class="col-12">
-                        <h4 style="color: white">${film.title}</h4>
+                        <h3 class="fs-4 text-white">${film.title}</h3>
                     </div>
                     <div class="col d-flex justify-content-end">
                         <button type="button" class="btn btn-secondary rounded-4 px-4" data-toggle="modal" data-target="#${film.id}"><strong>Détail</strong></button>

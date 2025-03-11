@@ -42,7 +42,7 @@
 			<div class="container text-bg-secondary shadow rounded-4  p-3 mt-4">
 				<div class="row">
 					<div class="col-md-2">
-						<img alt="logo" title="logo" src="logo.png" class="img-fluid">
+						<img alt="JustStreamIt Logo" title="logo" src="logo.png" class="img-fluid">
 					</div>
 					<div class="col align-self-center d-none d-sm-block ms-5">
 						<h1 style="color: white; text-align: left"> Vidéos à la demande </h1>
@@ -51,61 +51,65 @@
 			</div>
 		</header>
 	<!-- best film -->
-	<section>
-		<div class="container mt-5">
-			<h2> Meilleur film </h2></div>
-				<div class="container border border-black border-5 mt-1">
-					<div class="row" id="bestFilm" >
+	<main>
+		<section>
+			<div class="container mt-5">
+				<h2> Meilleur film </h2></div>
+					<div class="container border border-black border-5 mt-1">
+						<div class="row" id="bestFilm" >
+						</div>
 					</div>
+		</section>
+
+		<!-- best note -->
+		<section class="py-5">
+			<div class="container">
+				<h2>Films les mieux notés</h2>
+				<div class="row" id="bestRated">
+					<!-- square block model-->
 				</div>
-	</section>
-
-	<!-- best note -->
-	<section class="py-5">
-		<div class="container">
-			<h2>Films les mieux notés</h2>
-    		<div class="row" id="bestRated">
-        		<!-- square block model-->
-    		</div>
-		</div>
-	</section>
-
-	<!-- mystery -->
-	<section class="py-5">
-		<div class="container">
-			<h2>Mystery</h2>
-    		<div class="row" id="mystery">
-			<!-- square block model-->
 			</div>
-		</div>
-	</section>
+		</section>
 
-	<!-- animation -->
-	<section class="py-5">
-		<div class="container">
-			<h2>Animation</h2>
-    		<div class="row" id="animation">
-			<!-- square block model-->
+		<!-- mystery -->
+		<section class="py-5">
+			<div class="container">
+				<h2>Mystery</h2>
+				<div class="row" id="mystery">
+				<!-- square block model-->
+				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 
-	<!-- other -->
-	<section class="py-5">
-		<div class="container">
-			<div id="menu">
-				<label for="category-select" class="fs-2">Autres : </label>
-				<select name="category" id="category-select">
-					<option selected id="selected">Category</option>
-					<!-- getCategory() to fill the options -->
-				</select>
+		<!-- animation -->
+		<section class="py-5">
+			<div class="container">
+				<h2>Animation</h2>
+				<div class="row" id="animation">
+				<!-- square block model-->
+				</div>
 			</div>
-    		<div class="row" id="other">
-        		<!-- square block model-->
-    		</div>
-		</div>
-	</section>
+		</section>
 
+		<!-- other -->
+		<section class="py-5">
+			<div class="container">
+				<div id="menu">
+					<span>
+					<label for="category-select"><h2>Autres :</h2></label>
+						<select name="category" id="category-select">
+							<option selected id="selected">Category</option>
+							<!-- getCategory() to fill the options -->
+						</select>
+					</span>
+				</div>
+				<div class="row" id="other">
+					<!-- square block model-->
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer></footer>
 	 	<script src="script.js" defer></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
