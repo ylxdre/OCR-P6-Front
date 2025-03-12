@@ -17,7 +17,7 @@ async function bestFilm(filmId) {
                         <div class="bfilm" style="background-image: url(${bfilm.image_url}); background-size: cover; "></div>
                     </div>
                     <div class="col-12 col-md-9 my-3">
-                            <div class="col-12  d-flex justify-content-start"><h2>${bfilm.title}</h2></div>
+                            <div class="col-12  d-flex justify-content-start"><h3>${bfilm.title}</h3></div>
                             <div class="col-12">${bfilm.description}</div>
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="button" class="btn btn-danger rounded-4 px-4" data-toggle="modal" data-target="#${bfilm.id}">Détail</button>
