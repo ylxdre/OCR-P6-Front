@@ -43,7 +43,3 @@ Browse as any website
 
 YaL  <yann@needsome.coffee>
 
-## License
-
-MIT License  
-Copyright (c) 2025 
